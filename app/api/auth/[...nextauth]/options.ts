@@ -27,30 +27,33 @@ export const options: NextAuthOptions ={
                 }
             },
             async authorize(credentials, req){
-                const res = await fetch(process.env.APP_URL+"/checkUser" ,{
-                    method: 'POST', 
-                    headers: {
-                      'Content-Type': 'application/json',
-                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: JSON.stringify({username:credentials?.username, password:credentials?.password})
-                });                
-                const data = await res.json();
-                const user = data[0];
-                
-                if(credentials?.username === user.email && credentials?.password === user.password){
-                    const cookiesList = cookies() as any;
-                    user['image'] = "" +user.is_admin;                   
-                    return user as any;
+                try {
+                    const res = await fetch(process.env.APP_URL+"/checkUser" ,{
+                        method: 'POST', 
+                        headers: {
+                          'Content-Type': 'application/json',
+                          // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: JSON.stringify({username:credentials?.username, password:credentials?.password})
+                    });                
+                    const data = await res.json();
+                    const user = data[0];
                     
-
-                }
-                else{
-                    cookies().delete('email');
-                    cookies().delete('is_admin');
+                    if(credentials?.username === user.email && credentials?.password === user.password){
+                        const cookiesList = cookies() as any;
+                        user['image'] = "" +user.is_admin;                   
+                        return user as any;
+                        
+    
+                    }
+                    else{
+                        return null;
+    
+                    }
+                 }catch (error) {
                     return null;
-
-                }
+                 }
+                
             }
 
 

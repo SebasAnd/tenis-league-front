@@ -41,49 +41,53 @@ const Resultpage = async ({ searchParams }: Params) => {
     await CheckGoogleUser();
   }
   async function AddUser() {
-    const res = await fetch(process.env.APP_URL + "/addUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
-        email: searchParams.email,
-        name: searchParams.name,
-        is_admin: searchParams.is_admin,
-        nick_name: searchParams.nickName,
-        password: searchParams.password,
-      }),
-    });
-    const data = await res.json();
-    const user = data;
-    console.log(data);
-    if (data.error) {
-      result = (
-        <>
-          <div>
-            <span>ERROR, the user was not created</span>
-          </div>
-          <div>
-            <Link className="btn btn-primary" href={"/register"}>
-              Volver
-            </Link>
-          </div>
-        </>
-      );
-    } else {
-      result = (
-        <>
-          <div>
-            <span>User created successfully! </span>
-          </div>
-          <div>
-            <Link className="btn btn-primary" href={"/"}>
-              Volver
-            </Link>
-          </div>
-        </>
-      );
+    try {
+      const res = await fetch(process.env.APP_URL + "/addUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+          email: searchParams.email,
+          name: searchParams.name,
+          is_admin: searchParams.is_admin,
+          nick_name: searchParams.nickName,
+          password: searchParams.password,
+        }),
+      });
+      const data = await res.json();
+      const user = data;
+      console.log(data);
+      if (data.error) {
+        result = (
+          <>
+            <div>
+              <span>ERROR, the user was not created</span>
+            </div>
+            <div>
+              <Link className="btn btn-primary" href={"/register"}>
+                Volver
+              </Link>
+            </div>
+          </>
+        );
+      } else {
+        result = (
+          <>
+            <div>
+              <span>User created successfully! </span>
+            </div>
+            <div>
+              <Link className="btn btn-primary" href={"/"}>
+                Volver
+              </Link>
+            </div>
+          </>
+        );
+      }
+    } catch (error) {
+      return null;
     }
   }
   //"command": "INSERT"
